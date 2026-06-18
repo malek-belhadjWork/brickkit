@@ -1,0 +1,4 @@
+brick: textcase
+version: "1.0.0"
+impl: upper
+params: {}

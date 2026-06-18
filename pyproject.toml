@@ -1,0 +1,19 @@
+[project]
+name = "brickkit"
+version = "1.0.0"
+description = "A reusable convention + minimal runtime for building modular pipeline 'bricks'."
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+# Document-extraction bricks (the first instantiation). Per-plugin extras keep a
+# client from needing an unselected plugin's dependency.
+doc = ["pillow>=10.0", "pymupdf>=1.24"]   # pymupdf: rasterize PDF inputs in extract
+tesseract = ["pytesseract>=0.3"]
+
+[tool.brickkit]
+# Canonical engines this master repo publishes.
+bricks = ["source", "ocr", "extract", "validate", "writeout"]

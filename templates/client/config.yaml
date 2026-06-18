@@ -1,0 +1,32 @@
+# {{CLIENT}} — the entire client "template". This is the ONLY client-specific
+# file. One section per brick; keys you omit fall back to the brick's defaults.
+
+# Which bricks run, in order. (ocr is used by extract, not a stage — list it as a
+# section below but not here.)
+pipeline: [source, extract, validate, writeout]
+
+# --- registry bricks: pick an implementation + its params ---
+source:
+  impl: folder
+  params: {path: ./data/in, glob: "*.png"}
+
+ocr:
+  impl: synthetic           # production: tesseract
+  params: {font_size: 44}
+
+# --- engine bricks: the section is the settings, flat ---
+extract:
+  canonical: {long_side_px: 1500}   # reference unit for margins (image not resized)
+  fields:
+    # `box: [x, y, w, h]` are ratios 0..1 of the page (shorthand for a fixed locator).
+    - {name: invoice_number, type: string, box: [0.07, 0.09, 0.26, 0.04], margins: [2, 6, 10], format: 'INV-\d{6}'}
+    - {name: total,          type: money,  box: [0.61, 0.77, 0.24, 0.04], margins: [2, 6, 10], format: '\d+\.\d{2}'}
+
+validate:
+  required: [invoice_number, total]
+  min_confidence: 0.5
+  cross_checks: []          # e.g. - {result: total, terms: [subtotal, tax], tolerance: 0.02}
+
+writeout:
+  destination: ./data/out/results.csv
+  mapping: {invoice_number: "Invoice #", total: "Amount"}
