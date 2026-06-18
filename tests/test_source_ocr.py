@@ -7,13 +7,11 @@ from pathlib import Path
 from _harness import harness
 
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "bricks"))
 sys.path.insert(0, str(ROOT / "tools"))
 
-import ocr  # noqa: E402
-import source  # noqa: E402
 import textgen  # noqa: E402
 from brickkit import load_config  # noqa: E402
+from brickkit.bricks import ocr, source  # noqa: E402
 
 test = harness(__name__)
 TMP = ROOT / "tests" / "_tmp_phase2"

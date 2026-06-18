@@ -23,11 +23,12 @@ from .config import (
     parse_envelope,
     validate_section,
 )
+from .discover import build, discover_bricks, run_config
 from .pipeline import bind, run_pipeline, wire
 from .registry import Registry, build_plugin
 from .version import hash_dir, read_version
 
-VERSION = "1.0.0"  # framework version (stamped, copied into every client)
+VERSION = "1.0.0"  # framework/package version
 
 __all__ = [
     "VERSION",
@@ -49,4 +50,7 @@ __all__ = [
     "wire",
     "hash_dir",
     "read_version",
+    "discover_bricks",
+    "build",
+    "run_config",
 ]

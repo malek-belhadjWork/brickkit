@@ -100,12 +100,18 @@ it onto the consumer's config attribute, so the consumer keeps the pure
 
 ## Deployment & versioning
 
-- Each client is a self-contained project; engine code is **copied in** (read-only)
-  under `engines/`, stamped into `manifest.json` with content hashes.
-- One `config.yaml` per client (one section per brick).
-- Different clients may run different engine versions.
-- Upgrade = preserve config, replace the engine folder with the latest version,
-  restore config. New keys are optional (backward-compatible); only
-  schema-changing versions ship a `migrations/<from>__<to>.py`.
-- `brickctl verify` re-hashes copied engines vs the manifest to prove copies were
-  never edited in place.
+- `brickkit` is a **pip-installable package** (framework + bundled bricks). A
+  consuming project depends on it and provides only a `config.yaml`.
+- Install privately from GitHub, pinned to a tag:
+  `pip install "brickkit @ git+https://<token>@github.com/<you>/brickkit.git@v1.0.0"`.
+- Different projects pin different versions → they can run different engine
+  versions. Upgrade = bump the version pin and reinstall.
+- New config keys are optional (backward-compatible); a schema-changing release
+  bumps the major version.
+
+## Adding / splitting a brick
+
+A bundled brick is a subpackage of `brickkit.bricks` exposing NAME/VERSION/KIND.
+`discover_bricks()` finds it automatically. To split a brick into its **own
+package/repo** later, move the subpackage out and register it under the
+`brickkit.bricks` entry-point group — discovery and configs are unchanged.

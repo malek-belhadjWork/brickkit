@@ -16,7 +16,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "bricks"))
 sys.path.insert(0, str(ROOT / "tools"))
 
 import textgen  # noqa: E402
@@ -39,7 +38,7 @@ def _preflight():
         import pytesseract  # noqa: F401
     except ImportError:
         sys.exit("pytesseract missing — run: python -m pip install pytesseract")
-    import ocr  # noqa: E402
+    from brickkit.bricks import ocr
     try:
         plug = ocr.REGISTRY.create("tesseract", {"cmd": CMD} if CMD else {})
         from PIL import Image
@@ -57,11 +56,7 @@ def _preflight():
 
 def main():
     _preflight()
-    import extract
-    import ocr
-    import source
-    import validate
-    import writeout
+    from brickkit.bricks import extract, ocr, source, validate, writeout
 
     demo = ROOT / "tools" / "_ocr_demo"
     indir, outdir = demo / "in", demo / "out"

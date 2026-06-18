@@ -8,10 +8,8 @@ from pathlib import Path
 from _harness import harness
 
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "bricks"))
 
-import validate  # noqa: E402
-import writeout  # noqa: E402
+from brickkit.bricks import validate, writeout  # noqa: E402
 
 test = harness(__name__)
 TMP = ROOT / "tests" / "_tmp_phase4"

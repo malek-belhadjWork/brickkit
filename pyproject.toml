@@ -1,19 +1,28 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "brickkit"
 version = "1.0.0"
-description = "A reusable convention + minimal runtime for building modular pipeline 'bricks'."
+description = "A reusable convention + runtime for modular pipeline 'bricks' (with document-extraction bricks)."
 requires-python = ">=3.11"
 dependencies = [
-    "pydantic>=2.0",
-    "pyyaml>=6.0",
+    "pydantic>=2",
+    "pyyaml>=6",
+    "pillow>=10",       # image handling in extract / ocr
+    "pymupdf>=1.24",    # rasterize PDF inputs
+    "pytesseract>=0.3", # tesseract OCR plugin (needs the Tesseract binary installed)
 ]
 
-[project.optional-dependencies]
-# Document-extraction bricks (the first instantiation). Per-plugin extras keep a
-# client from needing an unselected plugin's dependency.
-doc = ["pillow>=10.0", "pymupdf>=1.24"]   # pymupdf: rasterize PDF inputs in extract
-tesseract = ["pytesseract>=0.3"]
+[tool.setuptools.packages.find]
+include = ["brickkit*"]
 
-[tool.brickkit]
-# Canonical engines this master repo publishes.
-bricks = ["source", "ocr", "extract", "validate", "writeout"]
+# Bricks discovered at runtime; bundled bricks are also registered here so the
+# discovery story is identical once a brick is split into its own package.
+[project.entry-points."brickkit.bricks"]
+source = "brickkit.bricks.source"
+ocr = "brickkit.bricks.ocr"
+extract = "brickkit.bricks.extract"
+validate = "brickkit.bricks.validate"
+writeout = "brickkit.bricks.writeout"
